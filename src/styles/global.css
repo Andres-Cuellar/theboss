@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #060606;
+  --color-carbon: #0c0e0a;
+  --color-boss-lime: #c4fb09;
+  --color-boss-green: #14ed16;
+
+  --font-display: "Anton", "Arial Narrow", sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+:root {
+  --boss-gradient: linear-gradient(135deg, #c4fb09 0%, #14ed16 100%);
+}
+
+html,
+body {
+  background: #060606;
+  color: #f4f6ef;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Big display type (Tailwind v4 also generates font-display from --font-display;
+   this guarantees it even without the theme lookup) */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+}
+
+/* Gradient utilities as real Tailwind utilities so variants
+   like group-hover: keep working */
+@utility text-boss-gradient {
+  background: var(--boss-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-boss-gradient {
+  background: var(--boss-gradient);
+}
+
+/* Outlined ghost type */
+.text-stroke {
+  -webkit-text-stroke: 1.5px rgba(244, 246, 239, 0.35);
+  color: transparent;
+}
+
+/* Aurora background blobs */
+.aurora {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.5;
+  will-change: transform;
+}
+
+.aurora-a {
+  background: radial-gradient(circle at center, rgba(196, 251, 9, 0.55), transparent 65%);
+}
+
+.aurora-b {
+  background: radial-gradient(circle at center, rgba(20, 237, 22, 0.45), transparent 65%);
+}
+
+/* Film grain overlay */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Marquee */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Pulsing glow ring for the featured CTA */
+@keyframes boss-ping {
+  0% {
+    box-shadow: 0 0 0 0 rgba(196, 251, 9, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(196, 251, 9, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(196, 251, 9, 0);
+  }
+}
+
+.boss-ping {
+  animation: boss-ping 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boss-ping {
+    animation: none;
+  }
+}
+
+/* GSAP sets initial states via gsap.from(), so content stays visible
+   if JS fails. Only helper class for masked char lines. */
+.gsap-hero-char {
+  display: inline-block;
+}
+
+.gsap-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}

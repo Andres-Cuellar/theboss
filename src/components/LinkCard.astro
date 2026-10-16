@@ -1,0 +1,83 @@
+---
+import type { BossLink } from "../data/chenzo.links";
+import { iconSvg } from "./icon";
+
+interface Props {
+  link: BossLink;
+  index: string;
+}
+
+const { link, index } = Astro.props;
+const isFeatured = link.tier === "featured";
+const externalAttrs = link.external
+  ? { target: "_blank", rel: "noopener noreferrer" }
+  : {};
+---
+
+<a
+  href={link.href}
+  class:list={[
+    "link-card group relative flex items-center gap-4 overflow-hidden rounded-2xl border p-4 transition-colors duration-300 sm:gap-5 sm:p-5",
+    isFeatured
+      ? "boss-ping border-transparent bg-boss-gradient text-black"
+      : "border-white/10 bg-white/[0.04] text-[#f4f6ef] hover:border-transparent hover:bg-white/[0.07]",
+  ]}
+  {...externalAttrs}
+>
+  <!-- hover wash for non-featured cards -->
+  {
+    !isFeatured && (
+      <span
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style="background: linear-gradient(135deg, rgba(196,251,9,0.14), rgba(20,237,22,0.14));"
+      />
+    )
+  }
+
+  <span
+    class:list={[
+      "relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl sm:h-14 sm:w-14",
+      isFeatured
+        ? "bg-black text-[#c4fb09]"
+        : "border border-white/15 bg-black/60 text-[#f4f6ef] group-hover:border-black group-hover:bg-black group-hover:text-[#c4fb09]",
+    ]}
+  >
+    <Fragment set:html={iconSvg(link.icon)} />
+  </span>
+
+  <span class="relative min-w-0 flex-1">
+    <span class="flex items-baseline gap-2">
+      <span class="font-mono text-[11px] opacity-50">{index}</span>
+      <span class="truncate font-display text-xl uppercase tracking-wide sm:text-2xl">
+        {link.label}
+      </span>
+    </span>
+    <span
+      class:list={[
+        "block truncate text-sm",
+        isFeatured ? "font-medium text-black/70" : "text-white/50",
+      ]}
+    >
+      {link.sub}
+    </span>
+  </span>
+
+  <span
+    aria-hidden="true"
+    class:list={[
+      "relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1",
+      isFeatured ? "bg-black text-[#c4fb09]" : "border border-white/15 group-hover:border-black group-hover:bg-boss-gradient group-hover:text-black",
+    ]}
+  >
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d="M3 13 13 3M13 3H6M13 3v7"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+</a>
