@@ -1,0 +1,119 @@
+---
+// Small, dismissible promo notice shown on every page.
+// Announcement only: real prices live in src/data/products.ts.
+---
+
+<div
+  id="price-notice"
+  class="price-notice pointer-events-none fixed inset-x-0 bottom-5 z-[45] translate-y-4 px-4 opacity-0 transition-all duration-300 ease-out sm:inset-x-auto sm:right-5 sm:w-80 sm:px-0"
+  role="status"
+  aria-live="polite"
+  aria-label="Price increase notice"
+>
+  <div
+    class="pointer-events-auto relative overflow-hidden rounded-2xl border border-[#c4fb09]/60 bg-[#0b0c0a]/98 p-4 shadow-[0_16px_50px_rgba(0,0,0,0.55)] backdrop-blur-md"
+  >
+    <button
+      id="price-notice-close"
+      type="button"
+      class="absolute top-2.5 right-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-white/60 transition-colors hover:bg-white/20 hover:text-white"
+      aria-label="Dismiss price notice"
+    >
+      <svg
+        class="h-3.5 w-3.5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <div class="flex items-center gap-1.5">
+      <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-[#c4fb09]"></span>
+      <p class="text-[9px] font-bold tracking-[0.18em] text-[#c4fb09] uppercase">
+        Price update
+      </p>
+    </div>
+
+    <p
+      class="font-display mt-1.5 pr-6 text-[13px] leading-snug tracking-wide text-white uppercase"
+    >
+      From Nov 1, the stud fee goes up to{" "}
+      <span class="text-[#c4fb09]">$3,500</span>
+    </p>
+    <p class="mt-1 text-[11px] leading-snug text-white/60">
+      Lock in today at $2,500 and keep that price for 12 months.
+    </p>
+
+    <a
+      id="price-notice-cta"
+      href="/checkout/chenzo-lock-in"
+      class="mt-3 flex h-9 w-full items-center justify-center gap-1.5 rounded-lg bg-[#c4fb09] px-3 font-display text-[11px] tracking-[0.06em] text-black uppercase transition-transform active:scale-[0.98]"
+    >
+      Lock in at $2,500
+      <svg
+        class="h-3.5 w-3.5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"></path>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<script>
+  const notice = document.getElementById("price-notice");
+  const closeBtn = document.getElementById("price-notice-close");
+  const STORAGE_KEY = "boss_price_notice_2026_11";
+
+  function hideNotice(persist = true) {
+    if (!notice) return;
+    notice.classList.add("opacity-0", "translate-y-4", "pointer-events-none");
+    if (!persist) return;
+    try {
+      window.localStorage.setItem(STORAGE_KEY, "dismissed");
+    } catch {
+      /* storage blocked: hide for this page view only */
+    }
+  }
+
+  let dismissed = false;
+  try {
+    dismissed = window.localStorage.getItem(STORAGE_KEY) === "dismissed";
+  } catch {
+    dismissed = false;
+  }
+
+  if (notice && !dismissed) {
+    // Sit above the fixed proof-of-payment bar when that bar is present.
+    if (document.getElementById("proof-bar")) {
+      notice.classList.remove("bottom-5");
+      notice.classList.add("bottom-36", "sm:bottom-5");
+    }
+
+    window.setTimeout(() => {
+      notice.classList.remove("opacity-0", "translate-y-4");
+    }, 1400);
+
+    // Never block a CTA for long: step aside after 15s unless dismissed.
+    window.setTimeout(() => {
+      if (notice.classList.contains("opacity-0")) return;
+      hideNotice(false);
+    }, 16400);
+  }
+
+  closeBtn?.addEventListener("click", () => hideNotice(true));
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && notice && !notice.classList.contains("opacity-0")) {
+      hideNotice(true);
+    }
+  });
+
+  document.getElementById("price-notice-cta")?.addEventListener("click", () => hideNotice(true));
+</script>

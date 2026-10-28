@@ -1,0 +1,707 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PaymentCard from "../components/PaymentCard.astro";
+import { PAYMENT_METHODS } from "../data/payments";
+---
+
+<Layout
+  title="Payment Methods | The Boss Frenchies LV"
+  description="Official payment methods for The Boss Frenchies LV: Zelle, Cash App, Apple Pay, PayPal and Venmo. Tap to copy the code or number."
+  path="/payment-methods"
+  image="/logo-the-boss.jpg"
+>
+  <!-- Background Glow & Aurora layer -->
+  <div
+    class="pointer-events-none fixed inset-0 overflow-hidden"
+    aria-hidden="true"
+  >
+    <div
+      class="aurora aurora-a -top-20 left-1/2 h-[26rem] w-[40rem] -translate-x-1/2 opacity-35"
+    >
+    </div>
+    <div
+      class="aurora aurora-b top-1/2 -left-28 h-[22rem] w-[22rem] opacity-25"
+    >
+    </div>
+    <div
+      class="aurora aurora-b -right-28 bottom-10 h-[24rem] w-[24rem] opacity-30"
+    >
+    </div>
+    <!-- Faint grid -->
+    <div
+      class="absolute inset-0"
+      style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 100% 72px;"
+    >
+    </div>
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-[#060606]/80 via-transparent to-[#060606]"
+    >
+    </div>
+  </div>
+
+  <div class="relative mx-auto w-full max-w-xl px-4 py-5 sm:px-6 sm:py-7">
+    <!-- Top Bar: Navigation Back, Logo & Share -->
+    <nav class="mb-4 flex items-center justify-between">
+      <a
+        href="/chenzo"
+        class="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold tracking-wider text-white/80 uppercase transition-colors hover:border-[#c4fb09] hover:bg-[#c4fb09]/10 hover:text-[#c4fb09]"
+      >
+        <svg
+          class="h-3.5 w-3.5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+          />
+        </svg>
+        <span>Back</span>
+      </a>
+
+      <!-- Compact Logo -->
+      <div class="flex items-center gap-2">
+        <img
+          src="/logo-the-boss.jpg"
+          alt="The Boss Frenchies LV"
+          width="32"
+          height="32"
+          class="h-8 w-8 rounded-full border border-[#14ed16]/60 object-cover"
+        />
+        <span class="font-display text-xs tracking-wider text-[#14ed16] uppercase sm:text-sm">
+          The Boss Frenchies
+        </span>
+      </div>
+
+      <button
+        id="share-btn"
+        type="button"
+        class="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold tracking-wider text-white/80 uppercase transition-colors hover:border-[#14ed16] hover:bg-[#14ed16]/10 hover:text-[#14ed16]"
+        aria-label="Share page"
+      >
+        <svg
+          class="h-3.5 w-3.5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+          />
+        </svg>
+        <span>Share</span>
+      </button>
+    </nav>
+
+    <!-- Compact Clean Header -->
+    <header class="pb-3 text-center">
+      <h1
+        class="font-display text-3xl tracking-tight text-white uppercase sm:text-5xl"
+        style="text-shadow: 0 0 25px rgba(196, 251, 9, 0.35);"
+      >
+        PAYMENT <span class="text-boss-gradient">METHODS</span>
+      </h1>
+
+      <div
+        class="mt-1 flex items-center justify-center gap-2 text-xs font-bold tracking-[0.25em] text-[#c4fb09] uppercase"
+      >
+        <span>FAST</span>
+        <span class="text-[#14ed16]">●</span>
+        <span>SECURE</span>
+        <span class="text-[#14ed16]">●</span>
+        <span>TRUSTED</span>
+      </div>
+
+      <p class="mx-auto mt-2 text-xs text-white/70">
+        Tap any method to <span class="font-semibold text-[#c4fb09]">copy</span> the number
+        or username.
+      </p>
+    </header>
+
+    <!-- Order summary (only when arriving from checkout) -->
+    <section
+      id="order-summary"
+      hidden
+      class="mt-3 rounded-2xl border-2 border-[#c4fb09] bg-black/85 p-4 text-left backdrop-blur-md"
+      style="box-shadow: 0 0 32px rgba(196, 251, 9, 0.25);"
+      aria-labelledby="order-summary-title"
+    >
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <p id="order-summary-title" class="text-[10px] font-bold tracking-[0.22em] text-white/50 uppercase">
+            Amount due
+          </p>
+          <p id="order-amount" class="font-display mt-0.5 text-4xl leading-none text-boss-gradient">
+            $0
+          </p>
+        </div>
+        <span
+          id="order-mode"
+          class="inline-flex shrink-0 items-center rounded-full border border-[#14ed16]/50 bg-[#14ed16]/10 px-2.5 py-1 text-[9px] font-bold tracking-[0.14em] text-[#14ed16] uppercase"
+        ></span>
+      </div>
+
+      <dl class="mt-3 grid grid-cols-2 gap-2 border-t border-white/10 pt-3 text-[11px]">
+        <div>
+          <dt class="tracking-wider text-white/40 uppercase">Product</dt>
+          <dd id="order-product" class="mt-0.5 font-semibold text-white/90"></dd>
+        </div>
+        <div>
+          <dt class="tracking-wider text-white/40 uppercase">Quantity</dt>
+          <dd id="order-quantity" class="mt-0.5 font-semibold text-white/90"></dd>
+        </div>
+        <div class="col-span-2 flex items-center justify-between gap-3">
+          <dt class="tracking-wider text-white/40 uppercase">Order ref</dt>
+          <dd>
+            <button
+              id="order-ref-btn"
+              type="button"
+              class="inline-flex items-center gap-1.5 rounded-lg border border-[#c4fb09]/50 bg-[#c4fb09]/10 px-2 py-1 font-mono text-[11px] font-bold text-[#c4fb09] transition-colors hover:bg-[#c4fb09] hover:text-black"
+              title="Copy order reference"
+            >
+              <span id="order-ref">—</span>
+              <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </dd>
+        </div>
+      </dl>
+
+      <div class="mt-2.5 space-y-1 border-t border-white/10 pt-2.5 text-[11px] leading-relaxed text-white/55">
+        <p>
+          Send <span class="font-semibold text-[#c4fb09]">exactly this amount</span> and
+          include your order reference in the memo or note.
+        </p>
+        <p>
+          Then send us the{" "}
+          <span class="font-semibold text-white/80">payment screenshot by WhatsApp or SMS</span>
+          {" "}so we can confirm your order.
+        </p>
+        <p>Shipping is not included and is quoted separately.</p>
+      </div>
+    </section>
+
+    <!-- Payment Methods Cards -->
+    <main class="mt-4 flex flex-col gap-3">
+      {PAYMENT_METHODS.map((method) => <PaymentCard method={method} />)}
+    </main>
+
+    <!-- Proof of payment bar: fixed on mobile, inline card on desktop -->
+    <aside
+      id="proof-bar"
+      class="proof-bar fixed inset-x-0 bottom-0 z-40 border-t border-[#14ed16]/50 bg-[#060606]/97 px-3 pt-2.5 pb-[calc(0.6rem+env(safe-area-inset-bottom))] shadow-[0_-8px_30px_rgba(0,0,0,0.65)] backdrop-blur-md sm:static sm:mt-5 sm:rounded-2xl sm:border-2 sm:border-[#14ed16]/40 sm:p-4 sm:shadow-none"
+      aria-label="Send your payment proof"
+    >
+      <div class="mx-auto flex w-full max-w-xl flex-col gap-2">
+        <div class="flex items-center gap-2">
+          <span class="relative flex h-2 w-2 shrink-0" aria-hidden="true">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#14ed16] opacity-75"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-[#14ed16]"></span>
+          </span>
+          <p
+            class="text-[11px] leading-tight font-bold tracking-[0.08em] text-white uppercase sm:text-xs"
+          >
+            After you pay, send us the screenshot
+          </p>
+          <span class="proof-arrow ml-auto shrink-0 text-[#c4fb09] sm:hidden" aria-hidden="true">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12" />
+            </svg>
+          </span>
+        </div>
+
+        <p class="text-[10.5px] leading-snug text-white/55 sm:text-xs">
+          Send your payment receipt by WhatsApp or SMS to{" "}
+          <a href="tel:+17024150055" class="font-semibold text-white/80 underline underline-offset-2">
+            (702) 415-0055
+          </a>
+          . Include your order reference so we can match it.
+        </p>
+
+        <div class="grid grid-cols-2 gap-2">
+          <a
+            id="proof-whatsapp"
+            href="https://wa.me/17024150055"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-track="proof-whatsapp"
+            class="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-[#14ed16] px-2 font-display text-[11px] tracking-[0.06em] text-black uppercase transition-transform active:scale-[0.97] sm:h-11 sm:text-xs"
+          >
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.05-.52-.099-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+              />
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+
+          <a
+            id="proof-sms"
+            href="sms:+17024150055"
+            data-track="proof-sms"
+            class="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-[#c4fb09]/70 bg-[#c4fb09]/10 px-2 font-display text-[11px] tracking-[0.06em] text-[#c4fb09] uppercase transition-transform active:scale-[0.97] sm:h-11 sm:text-xs"
+          >
+            <svg
+              class="h-4 w-4 shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M8 10h8M8 14h5m-1 6l-4-3H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v9a2 2 0 01-2 2h-3l-3 3z"
+              />
+            </svg>
+            <span>SMS</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+
+    <!-- Compact Footer Trust Badge -->
+    <footer class="mt-8 text-center">
+      <div class="flex items-center justify-center gap-2 text-[#c4fb09]">
+        <span class="text-xs tracking-widest text-[#c4fb09]/70">★★★</span>
+
+        <div
+          class="inline-flex items-center gap-1.5 rounded-full border border-[#14ed16]/40 bg-black/70 px-3 py-1 shadow-[0_0_12px_rgba(20,237,22,0.2)]"
+        >
+          <svg
+            class="h-3.5 w-3.5 text-[#14ed16]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+            />
+          </svg>
+          <span class="font-serif text-xs italic text-white/90">Thank You</span>
+          <span class="text-[9px] font-bold tracking-widest text-[#c4fb09] uppercase">
+            FOR TRUSTING
+          </span>
+        </div>
+
+        <span class="text-xs tracking-widest text-[#c4fb09]/70">★★★</span>
+      </div>
+
+      <p
+        class="font-display mt-2 text-sm tracking-[0.2em] text-[#14ed16] uppercase sm:text-base"
+        style="text-shadow: 0 0 15px rgba(20, 237, 22, 0.4);"
+      >
+        THE BOSS FRENCHIES LV
+      </p>
+
+      <div class="mt-4 flex flex-wrap items-center justify-center gap-2">
+        <a
+          href="https://wa.me/17024150055"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-semibold text-white/70 hover:border-[#14ed16] hover:text-[#14ed16]"
+        >
+          WhatsApp: (702) 415-0055
+        </a>
+        <a
+          href="tel:+17024150055"
+          class="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-semibold text-white/70 hover:border-[#c4fb09] hover:text-[#c4fb09]"
+        >
+          Call
+        </a>
+      </div>
+
+      <div class="mt-3 flex flex-wrap items-center justify-center gap-4 text-[10px] tracking-wider text-white/35 uppercase">
+        <a href="/terms-and-conditions" class="hover:text-white/70">Terms &amp; Conditions</a>
+        <a href="/privacy-policy" class="hover:text-white/70">Privacy Policy</a>
+      </div>
+    </footer>
+
+    <!-- Spacer so the fixed proof bar never covers the footer on mobile -->
+    <div class="h-28 sm:hidden" aria-hidden="true"></div>
+  </div>
+
+  <!-- Venmo QR Modal / Lightbox -->
+  <div
+    id="qr-modal"
+    class="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 opacity-0 backdrop-blur-md transition-opacity duration-200"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="qr-modal-title"
+  >
+    <div
+      class="relative w-full max-w-xs rounded-2xl border-2 border-[#14ed16] bg-[#0c0e0a] p-5 text-center shadow-[0_0_40px_rgba(20,237,22,0.35)]"
+    >
+      <button
+        id="qr-close-btn"
+        type="button"
+        class="absolute top-3 right-3 flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-white/80 hover:bg-white/20 hover:text-white"
+        aria-label="Close QR code"
+      >
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <h3 id="qr-modal-title" class="font-display text-xl text-white uppercase">
+        Venmo QR
+      </h3>
+
+      <div
+        class="mx-auto my-3 flex w-44 items-center justify-center overflow-hidden rounded-xl border border-[#14ed16]/50 bg-white p-2"
+      >
+        <img
+          src="/venmo-qr.png"
+          alt="Venmo QR Code"
+          width="200"
+          height="200"
+          class="h-full w-full object-contain"
+        />
+      </div>
+
+      <p class="font-mono text-base font-bold text-[#c4fb09]">@Angelo-Ruiz-12</p>
+      <p class="text-xs text-white/60">ANGHELO RUIZ</p>
+
+      <button
+        id="qr-modal-copy-btn"
+        type="button"
+        class="bg-boss-gradient mt-3 w-full rounded-xl py-2 font-display text-xs tracking-wider text-black uppercase transition-transform active:scale-95"
+      >
+        Copy Username
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div
+    id="copy-toast"
+    class="pointer-events-none fixed bottom-32 left-1/2 z-50 -translate-x-1/2 translate-y-8 rounded-full border border-[#14ed16] bg-black/95 px-5 py-2.5 opacity-0 shadow-[0_0_30px_rgba(20,237,22,0.5)] backdrop-blur-md transition-all duration-200 sm:bottom-6"
+    role="status"
+    aria-live="polite"
+  >
+    <div class="flex items-center gap-2 text-sm font-medium text-white">
+      <span class="flex h-5 w-5 items-center justify-center rounded-full bg-[#14ed16] text-black">
+        <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <span id="toast-message">Copied to clipboard</span>
+    </div>
+  </div>
+
+  <script>
+    import {
+      clampQuantity,
+      formatUSD,
+      getProductById,
+      modeBadge,
+      type CheckoutMode,
+    } from "../lib/checkout";
+
+    // 1. Toast Notification Logic
+    const toast = document.getElementById("copy-toast");
+    const toastMessage = document.getElementById("toast-message");
+    let toastTimeout: number | undefined;
+
+    function showToast(text: string) {
+      if (!toast || !toastMessage) return;
+      toastMessage.textContent = text;
+      toast.classList.remove("opacity-0", "translate-y-8");
+      toast.classList.add("opacity-100", "translate-y-0");
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = window.setTimeout(() => {
+        toast.classList.remove("opacity-100", "translate-y-0");
+        toast.classList.add("opacity-0", "translate-y-8");
+      }, 2000);
+    }
+
+    // 2. Clipboard Copy function
+    async function copyToClipboard(value: string, name: string, cardEl?: HTMLElement) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(value);
+        } else {
+          const textArea = document.createElement("textarea");
+          textArea.value = value;
+          textArea.style.position = "fixed";
+          textArea.style.left = "-9999px";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+        }
+
+        if ("vibrate" in navigator) {
+          navigator.vibrate?.([30, 40, 30]);
+        }
+
+        if (cardEl) {
+          const btn = cardEl.querySelector(".copy-btn");
+          const btnText = cardEl.querySelector(".btn-text");
+
+          if (btn && btnText) {
+            const originalText = btnText.textContent;
+            btnText.textContent = "Copied ✓";
+            btn.classList.add("bg-[#c4fb09]", "text-black", "border-[#c4fb09]");
+
+            cardEl.style.borderColor = "#c4fb09";
+            cardEl.style.boxShadow = "0 0 30px rgba(196, 251, 9, 0.6)";
+
+            setTimeout(() => {
+              btnText.textContent = originalText;
+              btn.classList.remove("bg-[#c4fb09]", "text-black", "border-[#c4fb09]");
+              cardEl.style.borderColor = "";
+              cardEl.style.boxShadow = "";
+            }, 1800);
+          }
+        }
+
+        showToast(`Copied: ${value} (${name})`);
+      } catch (err) {
+        console.error("Failed to copy:", err);
+        showToast(`Value: ${value}`);
+      }
+    }
+
+    // 3. Order summary from checkout (?amount=&quantity=&product=&mode=&order=)
+    const orderSummary = document.getElementById("order-summary");
+    const amountEl = document.getElementById("order-amount");
+    const productEl = document.getElementById("order-product");
+    const quantityEl = document.getElementById("order-quantity");
+    const modeEl = document.getElementById("order-mode");
+    const orderRefEl = document.getElementById("order-ref");
+    const orderRefBtn = document.getElementById("order-ref-btn");
+
+    interface StoredOrder {
+      orderRef?: string;
+      productId?: string;
+      productName?: string;
+      mode?: CheckoutMode;
+      quantity?: number;
+      unitPrice?: number;
+      total?: number;
+    }
+
+    function readStoredOrder(): StoredOrder | null {
+      try {
+        const raw = window.sessionStorage.getItem("boss_order");
+        return raw ? (JSON.parse(raw) as StoredOrder) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const storedOrder = readStoredOrder();
+    const requestedRef = params.get("order");
+    // Prefer the order saved at checkout when the ref matches, so a hand-edited
+    // URL cannot change the amount shown for a real order.
+    const storedMatches =
+      Boolean(storedOrder?.orderRef) && storedOrder?.orderRef === requestedRef;
+    const rawAmount = Number(
+      (storedMatches ? storedOrder?.total : params.get("amount")) ??
+        storedOrder?.total ??
+        0,
+    );
+    const amount = Number.isFinite(rawAmount) && rawAmount > 0 && rawAmount <= 1_000_000
+      ? Math.round(rawAmount * 100) / 100
+      : 0;
+
+    if (orderSummary && amount > 0) {
+      const productId = (storedMatches ? storedOrder?.productId : params.get("product")) ??
+        storedOrder?.productId ??
+        "";
+      const product = getProductById(productId);
+      const productName =
+        product?.name ?? storedOrder?.productName ?? "The Boss Frenchies order";
+      const mode = ((storedMatches ? storedOrder?.mode : params.get("mode")) ??
+        storedOrder?.mode ??
+        product?.mode ??
+        "pay") as CheckoutMode;
+      const quantity = clampQuantity(
+        (storedMatches ? storedOrder?.quantity : params.get("quantity")) ??
+          storedOrder?.quantity ??
+          1,
+      );
+      const orderRef = (params.get("order") ?? storedOrder?.orderRef ?? "").trim();
+
+      if (amountEl) amountEl.textContent = formatUSD(amount);
+      if (productEl) productEl.textContent = productName;
+      if (quantityEl) quantityEl.textContent = String(quantity);
+      if (modeEl) modeEl.textContent = modeBadge(mode);
+      if (orderRefEl) orderRefEl.textContent = orderRef || "—";
+
+      orderSummary.hidden = false;
+
+      orderRefBtn?.addEventListener("click", () => {
+        if (orderRef) copyToClipboard(orderRef, "Order ref");
+      });
+
+      // Prefill the proof-of-payment message with the order details.
+      const proofText = `Hi! I just paid ${formatUSD(amount)}${
+        orderRef ? ` for order ${orderRef}` : ""
+      }. Here is my payment screenshot.`;
+      const encodedProof = encodeURIComponent(proofText);
+
+      const proofWhatsApp = document.getElementById(
+        "proof-whatsapp",
+      ) as HTMLAnchorElement | null;
+      const proofSms = document.getElementById("proof-sms") as HTMLAnchorElement | null;
+
+      if (proofWhatsApp) {
+        proofWhatsApp.href = `https://wa.me/17024150055?text=${encodedProof}`;
+      }
+      if (proofSms) {
+        proofSms.href = `sms:+17024150055?body=${encodedProof}`;
+      }
+    }
+
+    // 4. Attach click listeners to all payment cards
+    document.querySelectorAll<HTMLElement>(".payment-card").forEach((card) => {
+      const copyValue = card.dataset.copyValue;
+      const methodName = card.dataset.methodName || "Method";
+
+      if (!copyValue) return;
+
+      // Tapping anywhere on the card copies, except the action buttons.
+      card.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        if (
+          target.closest(".copy-btn") ||
+          target.closest(".venmo-qr-btn") ||
+          target.closest("a")
+        ) {
+          return;
+        }
+        copyToClipboard(copyValue, methodName, card);
+      });
+
+      card.querySelector(".copy-btn")?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        copyToClipboard(copyValue, methodName, card);
+      });
+    });
+
+    // 5. Venmo QR Lightbox
+    const qrModal = document.getElementById("qr-modal");
+    const qrCloseBtn = document.getElementById("qr-close-btn");
+    const qrModalCopyBtn = document.getElementById("qr-modal-copy-btn");
+
+    function openQrModal() {
+      if (!qrModal) return;
+      qrModal.classList.remove("opacity-0", "pointer-events-none");
+      qrModal.classList.add("opacity-100", "pointer-events-auto");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeQrModal() {
+      if (!qrModal) return;
+      qrModal.classList.remove("opacity-100", "pointer-events-auto");
+      qrModal.classList.add("opacity-0", "pointer-events-none");
+      document.body.style.overflow = "";
+    }
+
+    document.querySelectorAll<HTMLElement>(".venmo-qr-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openQrModal();
+      });
+    });
+
+    qrCloseBtn?.addEventListener("click", closeQrModal);
+    qrModal?.addEventListener("click", (e) => {
+      if (e.target === qrModal) closeQrModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeQrModal();
+    });
+
+    qrModalCopyBtn?.addEventListener("click", () => {
+      copyToClipboard("@Angelo-Ruiz-12", "Venmo");
+      closeQrModal();
+    });
+
+    // 6. Share Button
+    const shareBtn = document.getElementById("share-btn");
+    shareBtn?.addEventListener("click", async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Payment Methods — The Boss Frenchies LV",
+            text: "Official payment methods for The Boss Frenchies LV.",
+            url: window.location.href,
+          });
+        } catch (_) {}
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        showToast("Link copied to clipboard");
+      }
+    });
+
+  </script>
+
+  <style is:global>
+    /* Subtle attention pulse on the mobile proof bar */
+    @keyframes proof-glow {
+      0%,
+      100% {
+        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.65), 0 0 0 rgba(20, 237, 22, 0);
+      }
+      50% {
+        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.65), 0 0 22px rgba(20, 237, 22, 0.35);
+      }
+    }
+
+    @keyframes proof-nudge {
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+      50% {
+        transform: translateX(3px);
+      }
+    }
+
+    .proof-bar {
+      animation: proof-glow 3.4s ease-in-out infinite;
+    }
+
+    .proof-arrow {
+      animation: proof-nudge 1.8s ease-in-out infinite;
+    }
+
+    @media (min-width: 640px) {
+      .proof-bar {
+        animation: none;
+        box-shadow: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .proof-bar,
+      .proof-arrow {
+        animation: none !important;
+      }
+    }
+  </style>
+</Layout>

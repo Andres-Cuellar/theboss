@@ -1,0 +1,174 @@
+---
+import Layout from "./Layout.astro";
+import { LEGAL } from "../data/legal";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+}
+
+const { title, description, path } = Astro.props;
+---
+
+<Layout
+  title={`${title} | ${LEGAL.businessName}`}
+  description={description}
+  path={path}
+  image="/logo-the-boss.jpg"
+  theme="light"
+>
+  <div class="flex min-h-screen flex-col bg-[#f7f8fa] text-[#111827]">
+    <header class="border-b border-[#e5e7eb] bg-white">
+      <div class="mx-auto flex h-16 w-full max-w-4xl items-center justify-between px-4 sm:px-6">
+        <a href="/chenzo" class="flex min-w-0 items-center gap-2.5">
+          <img
+            src="/logo-the-boss.jpg"
+            alt={LEGAL.businessName}
+            width="32"
+            height="32"
+            class="h-8 w-8 rounded-md border border-[#e5e7eb] object-cover"
+          />
+          <span class="truncate text-[15px] font-semibold tracking-tight text-[#111827]">
+            {LEGAL.businessName}
+          </span>
+        </a>
+        <a
+          href="/chenzo"
+          class="shrink-0 text-[13px] font-medium text-[#6b7280] transition-colors hover:text-[#111827]"
+        >
+          Back to store
+        </a>
+      </div>
+    </header>
+
+    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6 lg:py-14">
+      <p class="text-[11px] font-semibold tracking-[0.14em] text-[#6b7280] uppercase">
+        Legal
+      </p>
+      <h1 class="mt-2 text-3xl font-semibold tracking-tight text-[#111827] sm:text-4xl">
+        {title}
+      </h1>
+      <p class="mt-2 text-sm text-[#6b7280]">Effective date: {LEGAL.effectiveDate}</p>
+
+      <article
+        class="legal-doc mt-8 rounded-xl border border-[#e5e7eb] bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.04)] sm:p-8"
+      >
+        <slot />
+      </article>
+
+      <nav class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+        <a
+          href="/terms-and-conditions"
+          class="font-medium text-[#111827] underline underline-offset-2"
+        >
+          Terms &amp; Conditions
+        </a>
+        <a
+          href="/privacy-policy"
+          class="font-medium text-[#111827] underline underline-offset-2"
+        >
+          Privacy Policy
+        </a>
+        <a
+          href="/checkout"
+          class="font-medium text-[#111827] underline underline-offset-2"
+        >
+          Checkout
+        </a>
+      </nav>
+    </main>
+
+    <footer class="border-t border-[#e5e7eb] bg-white">
+      <div
+        class="mx-auto flex w-full max-w-4xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-[#6b7280] sm:flex-row sm:px-6"
+      >
+        <p>© {new Date().getFullYear()} {LEGAL.businessName} · {LEGAL.location}</p>
+        <div class="flex items-center gap-4">
+          <a href={LEGAL.whatsapp} class="hover:text-[#111827]">WhatsApp</a>
+          <a href={LEGAL.phoneHref} class="hover:text-[#111827]">{LEGAL.phone}</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</Layout>
+
+<style is:global>
+  .legal-doc {
+    color: #374151;
+  }
+
+  .legal-doc h2 {
+    margin-top: 1.9rem;
+    margin-bottom: 0.55rem;
+    color: #111827;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .legal-doc h2:first-child {
+    margin-top: 0;
+  }
+
+  .legal-doc h3 {
+    margin-top: 1.2rem;
+    margin-bottom: 0.35rem;
+    color: #111827;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .legal-doc p {
+    margin-bottom: 0.8rem;
+    font-size: 0.925rem;
+    line-height: 1.75;
+  }
+
+  .legal-doc ul,
+  .legal-doc ol {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 0.9rem;
+    padding-left: 1.25rem;
+    font-size: 0.925rem;
+    line-height: 1.7;
+  }
+
+  .legal-doc ul {
+    list-style: disc;
+  }
+
+  .legal-doc ol {
+    list-style: decimal;
+  }
+
+  .legal-doc li::marker {
+    color: #9aa3af;
+  }
+
+  .legal-doc strong {
+    color: #111827;
+    font-weight: 600;
+  }
+
+  .legal-doc a {
+    color: #111827;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .legal-doc a:hover {
+    color: #4b5563;
+  }
+
+  .legal-doc blockquote {
+    margin: 1rem 0;
+    border-left: 3px solid #d7dce3;
+    padding-left: 1rem;
+    color: #4b5563;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+</style>

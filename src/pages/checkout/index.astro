@@ -1,0 +1,30 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import CheckoutForm from "../../components/CheckoutForm.astro";
+import { getDefaultProduct } from "../../lib/checkout";
+import { CHECKOUT_PRODUCT_IDS, DEFAULT_PRODUCT_ID } from "../../data/products";
+
+const product = getDefaultProduct();
+---
+
+<Layout
+  title="Checkout | The Boss Frenchies LV"
+  description="Complete your details and book your Chenzo stud service or lock-in with The Boss Frenchies LV."
+  path="/checkout"
+  image="/logo-the-boss.jpg"
+  theme="light"
+>
+  <script is:inline define:vars={{ ids: CHECKOUT_PRODUCT_IDS, defaultId: DEFAULT_PRODUCT_ID }}>
+    // Support deep links written as /checkout?product=<id>
+    (() => {
+      const url = new URL(window.location.href);
+      const requested = url.searchParams.get("product");
+      if (!requested || requested === defaultId || !ids.includes(requested)) return;
+
+      url.pathname = `/checkout/${requested}`;
+      url.searchParams.delete("product");
+      window.location.replace(url.toString());
+    })();
+  </script>
+  <CheckoutForm product={product} />
+</Layout>

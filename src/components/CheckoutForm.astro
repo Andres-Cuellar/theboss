@@ -1,0 +1,794 @@
+---
+import type { CheckoutProduct } from "../data/products";
+import { COUNTRIES, DEFAULT_COUNTRY, US_STATES } from "../data/locations";
+import { checkoutTotal, formatUSD, modeBadge, modeLabel } from "../lib/checkout";
+
+interface Props {
+  product: CheckoutProduct;
+}
+
+const { product } = Astro.props;
+
+const initialTotal = checkoutTotal(product, 1);
+const inputClass =
+  "w-full rounded-lg border border-[#d7dce3] bg-white px-3.5 py-2.5 text-[15px] text-[#111827] shadow-[0_1px_2px_rgba(16,24,40,0.04)] transition placeholder:text-[#9aa3af] focus:border-[#111827] focus:outline-none focus:ring-4 focus:ring-black/5";
+const labelClass = "mb-1.5 block text-[13px] font-medium text-[#374151]";
+const sectionTitleClass = "text-[15px] font-semibold tracking-tight text-[#111827]";
+const sectionClass = "border-t border-[#eef0f3] pt-6";
+---
+
+<div class="flex min-h-screen flex-col bg-[#f7f8fa] text-[#111827]">
+  <header class="sticky top-0 z-40 border-b border-[#e5e7eb] bg-white/95 backdrop-blur">
+    <div class="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6">
+      <a href="/chenzo" class="flex min-w-0 items-center gap-2.5">
+        <img
+          src="/logo-the-boss.jpg"
+          alt="The Boss Frenchies LV"
+          width="32"
+          height="32"
+          class="h-8 w-8 rounded-md border border-[#e5e7eb] object-cover"
+        />
+        <span class="truncate text-[15px] font-semibold tracking-tight text-[#111827]">
+          The Boss Frenchies LV
+        </span>
+      </a>
+
+      <div class="flex shrink-0 items-center gap-1.5 text-[13px] font-medium text-[#6b7280]">
+        <svg
+          class="h-3.5 w-3.5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+          />
+        </svg>
+        <span>Secure<span class="hidden sm:inline"> checkout</span></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-7 sm:px-6 lg:py-12">
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-8">
+      <!-- Order summary (first on mobile, right column on desktop) -->
+      <aside class="order-first lg:order-2 lg:sticky lg:top-24">
+        <div
+          class="overflow-hidden rounded-xl border border-[#e5e7eb] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.04)]"
+        >
+          <div class="flex items-start gap-3 border-b border-[#eef0f3] p-5">
+            <img
+              src={product.image}
+              alt={product.imageAlt}
+              width="112"
+              height="112"
+              class="h-14 w-14 shrink-0 rounded-lg border border-[#eef0f3] object-cover"
+              loading="eager"
+            />
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-semibold leading-snug text-[#111827]">
+                {product.name}
+              </p>
+              <p class="mt-0.5 text-xs leading-relaxed text-[#6b7280]">
+                {product.tagline}
+              </p>
+            </div>
+            <p class="shrink-0 text-sm font-medium text-[#111827]">
+              {formatUSD(product.unitPrice)}
+            </p>
+          </div>
+
+          <dl class="space-y-3 p-5 text-sm">
+            <div class="flex items-center justify-between gap-3">
+              <dt class="text-[#6b7280]">Quantity</dt>
+              <dd>
+                <div
+                  class="inline-flex items-center overflow-hidden rounded-lg border border-[#d7dce3] bg-white"
+                >
+                  <button
+                    id="qty-minus"
+                    type="button"
+                    class="flex h-9 w-9 items-center justify-center text-lg leading-none text-[#374151] transition-colors hover:bg-[#f3f4f6] active:bg-[#e5e7eb] disabled:cursor-not-allowed disabled:opacity-30"
+                    aria-label="Decrease quantity"
+                  >
+                    −
+                  </button>
+                  <input
+                    id="quantity"
+                    name="quantity"
+                    type="number"
+                    inputmode="numeric"
+                    min="1"
+                    max={product.maxQty}
+                    step="1"
+                    value="1"
+                    class="qty-input h-9 w-12 border-x border-[#d7dce3] bg-white text-center text-sm font-medium text-[#111827] focus:outline-none"
+                    aria-label="Quantity"
+                  />
+                  <button
+                    id="qty-plus"
+                    type="button"
+                    class="flex h-9 w-9 items-center justify-center text-lg leading-none text-[#374151] transition-colors hover:bg-[#f3f4f6] active:bg-[#e5e7eb] disabled:cursor-not-allowed disabled:opacity-30"
+                    aria-label="Increase quantity"
+                  >
+                    +
+                  </button>
+                </div>
+              </dd>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <dt class="text-[#6b7280]">Subtotal</dt>
+              <dd class="font-medium text-[#111827]" data-subtotal>
+                {formatUSD(initialTotal)}
+              </dd>
+            </div>
+
+            <div class="flex items-baseline justify-between border-t border-[#eef0f3] pt-3">
+              <dt class="font-semibold text-[#111827]">Total due</dt>
+              <dd class="text-lg font-semibold text-[#111827]" data-total>
+                {formatUSD(initialTotal)}
+              </dd>
+            </div>
+          </dl>
+
+          <p class="border-t border-[#eef0f3] bg-[#fafbfc] px-5 py-3 text-xs leading-relaxed text-[#6b7280]">
+            {product.mode === "book"
+              ? "This is a deposit per unit. The remaining balance is due later."
+              : "Full payment for the selected quantity."}
+            <span class="mt-1 block font-medium text-[#374151]">
+              Shipping is not included.
+            </span>
+          </p>
+        </div>
+
+        <div class="mt-3 flex items-start gap-2 px-1 text-xs leading-relaxed text-[#6b7280]">
+          <svg
+            class="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#16a34a]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+            />
+          </svg>
+          <p>Your information is encrypted and only used to process this order.</p>
+        </div>
+      </aside>
+
+      <!-- Checkout form -->
+      <form
+        id="checkout-form"
+        data-product-id={product.id}
+        class="order-2 rounded-xl border border-[#e5e7eb] bg-white p-5 shadow-[0_1px_2px_rgba(16,24,40,0.04)] sm:p-7 lg:order-1"
+      >
+        <div class="border-b border-[#eef0f3] pb-5">
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#6b7280]">
+              {modeBadge(product.mode)}
+            </span>
+          </div>
+          <h1 class="mt-1.5 text-2xl font-semibold tracking-tight text-[#111827]">
+            Checkout
+          </h1>
+          <p class="mt-1 text-sm leading-relaxed text-[#6b7280]">
+            Complete your details to continue to payment.
+          </p>
+        </div>
+
+        <!-- Contact -->
+        <section class="pt-6">
+          <h2 class={sectionTitleClass}>Contact information</h2>
+
+          <div class="mt-4 flex flex-col gap-4">
+            <div>
+              <label class={labelClass} for="full-name">Full name</label>
+              <input
+                id="full-name"
+                name="full_name"
+                type="text"
+                class={inputClass}
+                placeholder="John Doe"
+                autocomplete="name"
+                minlength="2"
+                required
+              />
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label class={labelClass} for="email">Email</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  class={inputClass}
+                  placeholder="you@email.com"
+                  autocomplete="email"
+                  inputmode="email"
+                  required
+                />
+              </div>
+              <div>
+                <label class={labelClass} for="phone">Phone number</label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  class={inputClass}
+                  placeholder="(702) 000-0000"
+                  autocomplete="tel"
+                  inputmode="tel"
+                  pattern="[0-9+()\-.\s]{7,20}"
+                  title="Enter a valid phone number (at least 7 digits)"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Shipping -->
+        <section class={`mt-8 ${sectionClass}`}>
+          <h2 class={sectionTitleClass}>Shipping address</h2>
+
+          <div class="mt-4 flex flex-col gap-4">
+            <div>
+              <label class={labelClass} for="country">Country</label>
+              <select
+                id="country"
+                name="country"
+                class={inputClass}
+                autocomplete="country"
+                required
+              >
+                {COUNTRIES.map((country) => (
+                  <option value={country.code} selected={country.code === DEFAULT_COUNTRY}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label class={labelClass} for="address-line1">Street address</label>
+              <input
+                id="address-line1"
+                name="address_line1"
+                type="text"
+                class={inputClass}
+                placeholder="123 Main St"
+                autocomplete="address-line1"
+                required
+              />
+            </div>
+
+            <div>
+              <label class={labelClass} for="address-line2">
+                Apartment, suite, etc. <span class="font-normal text-[#9aa3af]">(optional)</span>
+              </label>
+              <input
+                id="address-line2"
+                name="address_line2"
+                type="text"
+                class={inputClass}
+                placeholder="Apt 4B"
+                autocomplete="address-line2"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label class={labelClass} for="city">City</label>
+                <input
+                  id="city"
+                  name="city"
+                  type="text"
+                  class={inputClass}
+                  placeholder="Las Vegas"
+                  autocomplete="address-level2"
+                  required
+                />
+              </div>
+
+              <div>
+                <label class={labelClass} for="state-us">State</label>
+                <select
+                  id="state-us"
+                  name="state_us"
+                  class={inputClass}
+                  autocomplete="address-level1"
+                  required
+                >
+                  <option value="" disabled selected>Select state</option>
+                  {US_STATES.map((state) => (
+                    <option value={state.code}>{state.name}</option>
+                  ))}
+                </select>
+                <input
+                  id="state-intl"
+                  name="state_intl"
+                  type="text"
+                  class={`${inputClass} hidden`}
+                  placeholder="State / Province"
+                  autocomplete="address-level1"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class={labelClass} for="postal-code">ZIP / Postal code</label>
+              <input
+                id="postal-code"
+                name="postal_code"
+                type="text"
+                class={inputClass}
+                placeholder="89101"
+                autocomplete="postal-code"
+                pattern="[0-9]{5}(-[0-9]{4})?"
+                title="Enter a valid US ZIP code"
+                required
+              />
+              <p class="mt-1.5 text-xs leading-relaxed text-[#6b7280]">
+                Shipping is <span class="font-medium text-[#374151]">not included</span> in
+                the price. We'll quote it separately based on your destination.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Schedule -->
+        <section class={`mt-8 ${sectionClass}`}>
+          <h2 class={sectionTitleClass}>Schedule</h2>
+
+          <div class="mt-4">
+            <label class={labelClass} for="estimated-date">Estimated required date</label>
+            <input
+              id="estimated-date"
+              name="estimated_date"
+              type="date"
+              class={inputClass}
+              required
+            />
+            <p class="mt-1.5 text-xs leading-relaxed text-[#6b7280]">
+              Let us know when you need the service. Earliest available date is tomorrow.
+            </p>
+          </div>
+        </section>
+
+        <!-- Consent -->
+        <section class="mt-8 border-t border-[#eef0f3] pt-6">
+          <div class="flex flex-col gap-3">
+            <label class="flex cursor-pointer items-start gap-2.5 text-[13px] leading-relaxed text-[#374151]">
+              <input
+                id="terms-consent"
+                name="terms_consent"
+                type="checkbox"
+                class="mt-0.5 h-4 w-4 shrink-0 rounded border-[#cbd5e1] accent-[#0f172a] focus:ring-2 focus:ring-black/10"
+                required
+              />
+              <span>
+                I have read and agree to the{" "}
+                <a
+                  href="/terms-and-conditions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-medium text-[#111827] underline underline-offset-2"
+                >Terms &amp; Conditions</a>{" "}
+                and{" "}
+                <a
+                  href="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-medium text-[#111827] underline underline-offset-2"
+                >Privacy Policy</a
+                >, including the processing of my personal data to manage this order.
+              </span>
+            </label>
+
+            <label class="flex cursor-pointer items-start gap-2.5 text-[13px] leading-relaxed text-[#6b7280]">
+              <input
+                id="marketing-consent"
+                name="marketing_consent"
+                type="checkbox"
+                class="mt-0.5 h-4 w-4 shrink-0 rounded border-[#cbd5e1] accent-[#0f172a] focus:ring-2 focus:ring-black/10"
+              />
+              <span>
+                I agree to receive order updates and occasional offers by email, SMS or
+                WhatsApp. I can opt out at any time.
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <div
+          id="form-error"
+          class="mt-6 hidden rounded-lg border border-[#fecaca] bg-[#fef2f2] px-4 py-3 text-sm text-[#991b1b]"
+          role="alert"
+          aria-live="assertive"
+        >
+          <p class="font-semibold">We couldn't send your order.</p>
+          <p id="form-error-detail" class="mt-0.5 text-xs text-[#b91c1c]">
+            Check your connection and try again.
+          </p>
+        </div>
+
+        <div class="mt-6">
+          <button
+            id="submit-btn"
+            type="submit"
+            class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#0f172a] px-5 text-[15px] font-semibold text-white shadow-sm transition-colors hover:bg-[#1e293b] focus:outline-none focus:ring-4 focus:ring-black/10 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <svg
+              id="submit-spinner"
+              class="hidden h-4 w-4 animate-spin"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-90" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            <span data-cta-label>{modeLabel(product.mode)} — {formatUSD(initialTotal)}</span>
+          </button>
+
+          {
+            product.mode === "book" && (
+              <p class="mt-3 text-xs leading-relaxed text-[#6b7280]">
+                Your {formatUSD(product.unitPrice)} deposit per unit locks in the
+                $2,500 price. The remaining balance is due later.
+              </p>
+            )
+          }
+
+          <p class="mt-3 flex items-center justify-center gap-1.5 text-xs text-[#6b7280]">
+            <svg
+              class="h-3.5 w-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
+            </svg>
+            Secure checkout · You'll continue to our payment page
+          </p>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="border-t border-[#e5e7eb] bg-white">
+    <div
+      class="mx-auto flex w-full max-w-5xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-[#6b7280] sm:flex-row sm:px-6"
+    >
+      <p>© {new Date().getFullYear()} The Boss Frenchies LV</p>
+      <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+        <a href="/terms-and-conditions" class="hover:text-[#111827]">Terms &amp; Conditions</a>
+        <a href="/privacy-policy" class="hover:text-[#111827]">Privacy Policy</a>
+        <a href="https://wa.me/17024150055" class="hover:text-[#111827]">WhatsApp</a>
+        <a href="tel:+17024150055" class="hover:text-[#111827]">Call</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<style>
+  .qty-input::-webkit-outer-spin-button,
+  .qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .qty-input {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+</style>
+
+<script>
+  import {
+    buildCheckoutPayload,
+    clampQuantity,
+    formatUSD,
+    generateOrderRef,
+    getDefaultProduct,
+    getProductById,
+    modeLabel,
+    UTM_KEYS,
+    WEBHOOK_URL,
+    type CheckoutDetails,
+  } from "../lib/checkout";
+  import type { CheckoutMode } from "../data/products";
+
+  const form = document.getElementById("checkout-form") as HTMLFormElement | null;
+
+  if (form) {
+    const productId = form.dataset.productId ?? "";
+    const product = getProductById(productId) ?? getDefaultProduct();
+    const productName = product.name;
+    const unitPrice = product.unitPrice;
+    const mode = product.mode as CheckoutMode;
+    const maxQty = product.maxQty;
+    const ctaLabel = modeLabel(mode);
+
+    const qtyInput = document.getElementById("quantity") as HTMLInputElement | null;
+    const minusBtn = document.getElementById("qty-minus") as HTMLButtonElement | null;
+    const plusBtn = document.getElementById("qty-plus") as HTMLButtonElement | null;
+    const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement | null;
+    const submitLabel = submitBtn?.querySelector<HTMLElement>("[data-cta-label]") ?? null;
+    const spinner = document.getElementById("submit-spinner");
+    const errorBox = document.getElementById("form-error");
+    const errorDetail = document.getElementById("form-error-detail");
+
+    const countrySelect = document.getElementById("country") as HTMLSelectElement | null;
+    const stateUs = document.getElementById("state-us") as HTMLSelectElement | null;
+    const stateIntl = document.getElementById("state-intl") as HTMLInputElement | null;
+    const postalCode = document.getElementById("postal-code") as HTMLInputElement | null;
+    const dateInput = document.getElementById("estimated-date") as HTMLInputElement | null;
+    const termsConsent = document.getElementById("terms-consent") as HTMLInputElement | null;
+    const marketingConsent = document.getElementById("marketing-consent") as HTMLInputElement | null;
+
+    let quantity = clampQuantity(new URLSearchParams(window.location.search).get("qty"));
+    let submitting = false;
+
+    function total(): number {
+      return unitPrice * quantity;
+    }
+
+    function paintQuantity() {
+      if (qtyInput) qtyInput.value = String(quantity);
+      if (minusBtn) minusBtn.disabled = quantity <= 1;
+      if (plusBtn) plusBtn.disabled = quantity >= maxQty;
+
+      document.querySelectorAll<HTMLElement>("[data-subtotal]").forEach((node) => {
+        node.textContent = formatUSD(total());
+      });
+      document.querySelectorAll<HTMLElement>("[data-total]").forEach((node) => {
+        node.textContent = formatUSD(total());
+      });
+
+      if (submitLabel) submitLabel.textContent = `${ctaLabel} — ${formatUSD(total())}`;
+
+      const url = new URL(window.location.href);
+      if (quantity > 1) {
+        url.searchParams.set("qty", String(quantity));
+      } else {
+        url.searchParams.delete("qty");
+      }
+      window.history.replaceState({}, "", url);
+    }
+
+    function trackInitiateCheckout() {
+      const fbq = (window as unknown as { fbq?: (...args: unknown[]) => void }).fbq;
+      if (typeof fbq !== "function") return;
+
+      fbq("track", "InitiateCheckout", {
+        content_ids: [productId],
+        content_name: productName,
+        content_type: "product",
+        value: total(),
+        currency: "USD",
+        num_items: quantity,
+      });
+    }
+
+    function setQuantity(next: number) {
+      const clamped = clampQuantity(next);
+      if (clamped === quantity) return;
+      quantity = clamped;
+      paintQuantity();
+      trackInitiateCheckout();
+    }
+
+    minusBtn?.addEventListener("click", () => setQuantity(quantity - 1));
+    plusBtn?.addEventListener("click", () => setQuantity(quantity + 1));
+
+    qtyInput?.addEventListener("change", () => setQuantity(Number(qtyInput.value)));
+    qtyInput?.addEventListener("blur", () => {
+      quantity = clampQuantity(qtyInput.value);
+      paintQuantity();
+    });
+
+    function syncCountryFields() {
+      const isUs = (countrySelect?.value ?? "US") === "US";
+
+      if (stateUs) {
+        stateUs.classList.toggle("hidden", !isUs);
+        stateUs.disabled = !isUs;
+        stateUs.required = isUs;
+      }
+      if (stateIntl) {
+        stateIntl.classList.toggle("hidden", isUs);
+        stateIntl.disabled = isUs;
+        stateIntl.required = !isUs;
+      }
+      if (postalCode) {
+        if (isUs) {
+          postalCode.pattern = "[0-9]{5}(-[0-9]{4})?";
+          postalCode.title = "Enter a valid US ZIP code";
+          postalCode.placeholder = "89101";
+        } else {
+          postalCode.removeAttribute("pattern");
+          postalCode.title = "";
+          postalCode.placeholder = "Postal code";
+        }
+      }
+    }
+
+    countrySelect?.addEventListener("change", syncCountryFields);
+    syncCountryFields();
+
+    // Date input must use the customer's local timezone, not UTC.
+    function localIsoDate(offsetDays: number): string {
+      const date = new Date();
+      date.setDate(date.getDate() + offsetDays);
+      const pad = (value: number) => String(value).padStart(2, "0");
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    }
+
+    if (dateInput) {
+      dateInput.min = localIsoDate(product.minLeadDays);
+    }
+
+    function readDetails(): CheckoutDetails {
+      const value = (id: string) =>
+        (document.getElementById(id) as HTMLInputElement | null)?.value ?? "";
+      const isUs = (countrySelect?.value ?? "US") === "US";
+
+      return {
+        fullName: value("full-name"),
+        email: value("email"),
+        phone: value("phone"),
+        addressLine1: value("address-line1"),
+        addressLine2: value("address-line2"),
+        city: value("city"),
+        state: isUs ? (stateUs?.value ?? "") : (stateIntl?.value ?? ""),
+        postalCode: value("postal-code"),
+        country: countrySelect?.value ?? "US",
+        estimatedDate: value("estimated-date"),
+      };
+    }
+
+    function setLoading(loading: boolean) {
+      submitting = loading;
+      if (submitBtn) {
+        submitBtn.disabled = loading;
+        submitBtn.setAttribute("aria-busy", String(loading));
+      }
+      spinner?.classList.toggle("hidden", !loading);
+      if (loading && submitLabel) submitLabel.textContent = "Processing…";
+      if (!loading) paintQuantity();
+    }
+
+    function showError(detail: string) {
+      if (errorDetail) errorDetail.textContent = detail;
+      errorBox?.classList.remove("hidden");
+      errorBox?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function hideError() {
+      errorBox?.classList.add("hidden");
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (submitting) return;
+      hideError();
+
+      if (!form.reportValidity()) return;
+
+      if (dateInput?.min && dateInput.value < dateInput.min) {
+        dateInput.setCustomValidity("Please choose a date on or after tomorrow.");
+        dateInput.reportValidity();
+        dateInput.setCustomValidity("");
+        return;
+      }
+
+      quantity = clampQuantity(qtyInput?.value);
+      paintQuantity();
+
+      const details = readDetails();
+      const orderRef = generateOrderRef();
+      const submittedAt = new Date().toISOString();
+      const params = new URLSearchParams(window.location.search);
+      const utm: Record<string, string> = {};
+      UTM_KEYS.forEach((key) => {
+        const raw = params.get(key);
+        if (raw) utm[key] = raw;
+      });
+
+      const payload = buildCheckoutPayload({
+        product,
+        quantity,
+        orderRef,
+        details,
+        consent: {
+          termsAccepted: Boolean(termsConsent?.checked),
+          marketingConsent: Boolean(marketingConsent?.checked),
+        },
+        utm,
+        pageUrl: window.location.href,
+        submittedAt,
+      });
+
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 15000);
+
+      setLoading(true);
+
+      try {
+        const response = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Webhook responded with ${response.status}`);
+        }
+
+        window.sessionStorage.setItem(
+          "boss_order",
+          JSON.stringify({
+            orderRef,
+            productId,
+            productName,
+            mode,
+            quantity,
+            unitPrice,
+            total: payload.total,
+            submittedAt,
+          }),
+        );
+
+        const fbq = (window as unknown as { fbq?: (...args: unknown[]) => void }).fbq;
+        if (typeof fbq === "function") {
+          fbq("track", "AddPaymentInfo", {
+            content_ids: [productId],
+            content_name: productName,
+            content_type: "product",
+            value: payload.total,
+            currency: "USD",
+            num_items: quantity,
+          });
+        }
+
+        const redirect = new URL("/payment-methods", window.location.origin);
+        redirect.searchParams.set("amount", String(payload.total));
+        redirect.searchParams.set("quantity", String(quantity));
+        redirect.searchParams.set("product", productId);
+        redirect.searchParams.set("mode", mode);
+        redirect.searchParams.set("order", orderRef);
+
+        window.location.assign(redirect.toString());
+      } catch (error) {
+        setLoading(false);
+        const detail =
+          error instanceof DOMException && error.name === "AbortError"
+            ? "The request took too long. Please try again."
+            : "Check your connection and try again. If it keeps failing, contact us on WhatsApp.";
+        showError(detail);
+        console.error("Checkout webhook failed:", error);
+      } finally {
+        window.clearTimeout(timeout);
+      }
+    });
+
+    paintQuantity();
+    trackInitiateCheckout();
+  }
+</script>

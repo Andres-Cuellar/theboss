@@ -1,0 +1,305 @@
+---
+import LegalLayout from "../layouts/LegalLayout.astro";
+import { LEGAL } from "../data/legal";
+
+const description =
+  "Terms and conditions for stud services, lock-in reservations, payments, shipping, and the pregnancy guarantee offered by The Boss Frenchies LV.";
+---
+
+<LegalLayout
+  title="Terms & Conditions"
+  description={description}
+  path="/terms-and-conditions"
+>
+  <p>
+    These Terms &amp; Conditions ("Terms") govern the purchase and use of services and
+    reservations offered by <strong>{LEGAL.businessName}</strong> ("we", "us", "our")
+    through this website. By placing an order, paying a deposit, or booking a service,
+    you ("customer", "you") agree to these Terms. If you do not agree, please do not
+    place an order.
+  </p>
+
+  <h2>1. About us</h2>
+  <p>
+    {LEGAL.businessName} is a French Bulldog kennel based in {LEGAL.location}. We offer
+    stud services and lock-in reservations. You can contact us at
+    <a href={LEGAL.phoneHref}>{LEGAL.phone}</a> or by
+    <a href={LEGAL.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>.
+  </p>
+
+  <h2>2. Services</h2>
+  <p>We currently offer two products through our checkout:</p>
+  <ul>
+    <li>
+      <strong>Stud service ("Pay now"):</strong> a breeding with our stud, subject to
+      availability and the conditions in these Terms.
+    </li>
+    <li>
+      <strong>Lock-in reservation ("Book"):</strong> a deposit that reserves a breeding
+      and locks in the advertised price, subject to the conditions in these Terms.
+    </li>
+  </ul>
+  <p>
+    The product, quantity, unit price, and total are shown at checkout before you submit
+    your order. The quantity you select may not exceed the limit shown on the page.
+  </p>
+
+  <h2>3. Eligibility</h2>
+  <p>
+    You must be at least 18 years old and legally able to enter into a contract. By
+    placing an order, you confirm that you own the bitch or are authorized by its owner
+    to arrange the breeding.
+  </p>
+
+  <h2>4. Pricing, deposits, and payments</h2>
+  <ul>
+    <li>All prices are in U.S. dollars (USD).</li>
+    <li>
+      The lock-in reservation is <strong>$500 per unit</strong> and is a deposit toward
+      the stud service. The full stud service is <strong>$2,500 per unit</strong>.
+    </li>
+    <li>
+      Shipping and transport are <strong>not included</strong> in any price. See Section
+      5 below.
+    </li>
+    <li>
+      The total shown at checkout is the amount due for the selected product and
+      quantity, before shipping and any third-party costs.
+    </li>
+    <li>
+      Payment must be made using one of the methods listed on our
+      <a href="/payment-methods">Payment Methods</a> page. Please include your order
+      reference in the memo or note.
+    </li>
+    <li>
+      Your order is confirmed only after the payment has cleared and we have confirmed
+      availability. Sending a checkout form does not, by itself, reserve a date or a
+      breeding.
+    </li>
+    <li>
+      We do not process card payments directly on this website. Payments made through
+      Zelle, Cash App, Apple Pay, PayPal, Venmo, or another provider are subject to that
+      provider's terms.
+    </li>
+    <li>
+      Prices may change. The price you lock in is the price shown when your payment is
+      accepted, subject to the lock-in terms in Section 9.
+    </li>
+  </ul>
+
+  <h2>5. Shipping and transport are not included</h2>
+  <p>
+    <strong>Shipping is not included in the price of any product or service.</strong>
+    Shipping, transport, crates, health certificates, permits, and transport insurance
+    are quoted separately based on your destination and the method you choose, and are
+    paid by you.
+  </p>
+  <p>
+    Pickup in Las Vegas may be available by appointment. Risk and responsibility for the
+    dog pass to you when the dog is picked up or handed to the transport provider. Dates
+    provided for delivery or transport are estimates and may change due to weather,
+    airline schedules, veterinary requirements, or other circumstances outside our
+    control.
+  </p>
+
+  <h2>6. Booking and estimated dates</h2>
+  <p>
+    The estimated required date you select at checkout is a request, not a confirmed
+    appointment. We will contact you to confirm the date based on the bitch's cycle,
+    progesterone testing, and availability. We may reschedule for health, safety, or
+    operational reasons.
+  </p>
+  <p>
+    Please notify us as soon as possible if you need to change a confirmed date. Changes
+    requested less than 48 hours before the appointment may be treated as a late
+    cancellation under Section 10.
+  </p>
+
+  <h2>7. Customer responsibilities</h2>
+  <p>You are responsible for:</p>
+  <ul>
+    <li>Providing accurate contact, shipping, and order information.</li>
+    <li>
+      Ensuring the bitch is healthy, vaccinated, and tested negative for brucellosis
+      within 30 days before the breeding, and is at least 18 months old.
+    </li>
+    <li>
+      Providing progesterone test results or other veterinary information we request to
+      time the breeding properly.
+    </li>
+    <li>Transporting and handling the bitch safely and humanely.</li>
+    <li>
+      Using the service only for lawful purposes and in compliance with applicable animal
+      welfare, breeding, and transport laws.
+    </li>
+    <li>
+      Paying all veterinary, shipping, transport, and third-party costs, unless we agree
+      otherwise in writing.
+    </li>
+  </ul>
+
+  <h2>8. Pregnancy guarantee</h2>
+  <p>
+    We guarantee that a breeding with our stud will result in a confirmed pregnancy in
+    your bitch, subject to the conditions in this section. The guarantee applies to the
+    breeding you purchased, whether natural or insemination, and is subject to the
+    remedies below.
+  </p>
+
+  <h3>8.1 Conditions required to validate the guarantee</h3>
+  <ol>
+    <li>
+      <strong>Video proof of the insemination.</strong> You must record a continuous,
+      unedited video of the complete insemination procedure. The video must show both
+      dogs, the date and time, and the procedure from start to finish. Send us the
+      original video file within 7 days after the procedure. Photos, clips, or edited
+      videos are not sufficient.
+    </li>
+    <li>
+      <strong>Proper timing.</strong> The breeding must take place within the fertile
+      window confirmed by progesterone testing or another method we approve in writing.
+    </li>
+    <li>
+      <strong>Veterinary confirmation.</strong> Pregnancy must be confirmed by a licensed
+      veterinarian using ultrasound (or another method we approve) between 25 and 35 days
+      after the breeding.
+    </li>
+    <li>
+      <strong>Notice.</strong> If no pregnancy is confirmed, you must notify us in
+      writing within 7 days after the veterinary examination and no later than 45 days
+      after the breeding, and provide the veterinary report.
+    </li>
+    <li>
+      <strong>Payment and health.</strong> The service must be fully paid, and the bitch
+      must meet the health requirements in Section 7 at the time of breeding and
+      confirmation.
+    </li>
+  </ol>
+
+  <h3>8.2 Remedy</h3>
+  <p>
+    If all conditions are met and no pregnancy is confirmed, we will provide
+    <strong>one repeat breeding with the same stud at no additional stud fee</strong>,
+    subject to availability and to the same conditions, within 12 months after the
+    original breeding. If the repeat breeding also does not result in a confirmed
+    pregnancy under the same conditions, we will refund the stud service fee paid for the
+    original breeding, excluding shipping, transport, veterinary, travel, and other
+    third-party costs.
+  </p>
+  <p>
+    This remedy is the exclusive remedy for a failed pregnancy. It does not cover lost
+    profits, litter expectations, or costs incurred with third parties.
+  </p>
+
+  <h3>8.3 Exclusions</h3>
+  <p>The guarantee does not apply if:</p>
+  <ul>
+    <li>You do not provide the required video proof or veterinary confirmation.</li>
+    <li>The breeding was not performed within the approved fertile window.</li>
+    <li>
+      The bitch had a pre-existing condition, infection (including brucellosis),
+      pyometra, abortion, or other health issue that prevented pregnancy.
+    </li>
+    <li>The bitch was bred with another stud during the same cycle.</li>
+    <li>You failed to follow reasonable veterinary or handling instructions.</li>
+    <li>The claim is made after the notice periods in Section 8.1.</li>
+  </ul>
+
+  <h2>9. Lock-in reservations</h2>
+  <p>
+    A lock-in reservation is <strong>$500 per unit</strong>. The deposit is applied to
+    the stud service fee and locks in the advertised price of $2,500 per unit for 12
+    months from the date of payment, unless we agree otherwise in writing.
+  </p>
+  <p>
+    Lock-in deposits are non-refundable, except where required by law or if we cancel the
+    reservation and cannot offer a reasonable alternative. A lock-in is valid for one
+    breeding and is not transferable to another person without our written consent. If
+    the price changes after your lock-in expires, the new price applies.
+  </p>
+
+  <h2>10. Cancellations, rescheduling, and refunds</h2>
+  <p>
+    If you cancel a confirmed appointment less than 48 hours before the scheduled time,
+    or if you do not attend, the payment or deposit may be retained to cover the reserved
+    time and costs. Rescheduling is subject to availability.
+  </p>
+  <p>
+    If we cancel and cannot offer a reasonable alternative date, we will refund the
+    amount paid for the cancelled service. Shipping, transport, veterinary, and
+    third-party costs are not refundable by us. Refunds are issued using the same payment
+    method when possible.
+  </p>
+
+  <h2>11. Health and veterinary disclaimer</h2>
+  <p>
+    Our stud is healthy to the best of our knowledge, and health records are available on
+    request. We do not guarantee litter size, color, markings, conformation, gender, or
+    any specific outcome beyond the pregnancy guarantee in Section 8. You are responsible
+    for the health and veterinary care of your bitch and for any costs related to her
+    pregnancy, whelping, and puppies.
+  </p>
+
+  <h2>12. Limitation of liability</h2>
+  <p>
+    To the maximum extent permitted by law, we are not liable for indirect, incidental,
+    special, consequential, or punitive damages, or for lost profits, lost opportunities,
+    or expectations about a litter. Our total liability for any claim arising from a
+    service will not exceed the amount you paid us for that service. Nothing in these
+    Terms limits rights that cannot be waived under applicable law.
+  </p>
+
+  <h2>13. Indemnification</h2>
+  <p>
+    You agree to indemnify and hold us harmless from claims, damages, and costs arising
+    from your breach of these Terms, your misuse of the service, inaccurate information
+    you provide, the condition or behavior of your bitch, or your violation of any law or
+    third-party right.
+  </p>
+
+  <h2>14. Privacy and data consent</h2>
+  <p>
+    By submitting the checkout form, you consent to the collection and processing of your
+    personal information as described in our
+    <a href="/privacy-policy">Privacy Policy</a>, including the use of your name, email,
+    phone number, shipping address, order details, and the video and veterinary records
+    required to validate the pregnancy guarantee.
+  </p>
+  <p>
+    Marketing communications are optional and require a separate opt-in at checkout. You
+    can withdraw marketing consent at any time by contacting us.
+  </p>
+
+  <h2>15. Media and communications</h2>
+  <p>
+    We may photograph or record our dogs and breeding activities for health records and
+    promotional purposes. We will not publish your personal information or identifiable
+    images of you without your consent. Video and records you send for the pregnancy
+    guarantee are used to validate the claim and are handled as described in our Privacy
+    Policy.
+  </p>
+
+  <h2>16. Governing law and disputes</h2>
+  <p>
+    These Terms are governed by the laws of the State of Nevada, USA, without regard to
+    conflict-of-law rules. Before filing a claim, please contact us so we can try to
+    resolve the issue informally within 30 days. Any dispute that cannot be resolved
+    informally will be brought in the state or federal courts located in Clark County,
+    Nevada, and you consent to their jurisdiction.
+  </p>
+
+  <h2>17. Changes to these Terms</h2>
+  <p>
+    We may update these Terms from time to time. The current version is posted on this
+    page with its effective date. Changes apply to orders placed after the updated
+    version is posted. If a change materially affects an order already paid, we will
+    contact you when appropriate.
+  </p>
+
+  <h2>18. Contact</h2>
+  <p>
+    Questions about these Terms can be sent to {LEGAL.businessName}, {LEGAL.location}, at
+    <a href={LEGAL.phoneHref}>{LEGAL.phone}</a> or by
+    <a href={LEGAL.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>.
+  </p>
+</LegalLayout>

@@ -1,0 +1,26 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import CheckoutForm from "../../components/CheckoutForm.astro";
+import { CHECKOUT_PRODUCTS, DEFAULT_PRODUCT_ID } from "../../data/products";
+import { formatUSD } from "../../lib/checkout";
+
+export function getStaticPaths() {
+  return Object.values(CHECKOUT_PRODUCTS).map((product) => ({
+    params: { product: product.id },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const canonicalPath = product.id === DEFAULT_PRODUCT_ID ? "/checkout" : `/checkout/${product.id}`;
+---
+
+<Layout
+  title={`${product.name} — Checkout | The Boss Frenchies LV`}
+  description={`${product.name} — ${formatUSD(product.unitPrice)} per unit. Complete your details to continue to payment.`}
+  path={canonicalPath}
+  image="/logo-the-boss.jpg"
+  theme="light"
+>
+  <CheckoutForm product={product} />
+</Layout>

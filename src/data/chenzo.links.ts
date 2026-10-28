@@ -6,7 +6,8 @@ export type BossIcon =
   | "whatsapp"
   | "instagram"
   | "facebook"
-  | "tiktok";
+  | "tiktok"
+  | "card";
 
 export interface BossLink {
   /** Icon shown in the badge square */
@@ -54,18 +55,23 @@ export const LINKS: BossLink[] = [
   {
     icon: "lock",
     label: "Lock-In Chenzo Stud",
-    sub: "Lock in with just $500 — keep the $2500 price",
-    href: "https://api.gstf.us/payment-link/6ad26002c0e70c7fefb751a1",
+    sub: "Lock in with just $500 — keep the $2,500 price",
+    href: "/checkout/chenzo-lock-in",
     tier: "featured",
-    external: true,
   },
   {
     icon: "paw",
     label: "Chenzo Stud Service",
     sub: "Info, pricing & availability",
-    href: "https://api.gstf.us/payment-link/6ad260d0c0e70c7fefb751a4",
+    href: "/checkout/chenzo-stud-service",
     tier: "primary",
-    external: true,
+  },
+  {
+    icon: "card",
+    label: "Payment Methods",
+    sub: "Zelle, Cash App, Apple Pay, PayPal & Venmo",
+    href: "/payment-methods",
+    tier: "primary",
   },
   {
     icon: "phone",

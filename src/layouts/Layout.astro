@@ -1,14 +1,23 @@
 ---
 import "../styles/global.css";
+import PriceNotice from "../components/PriceNotice.astro";
 
 interface Props {
   title: string;
   description: string;
   path?: string;
   image?: string;
+  /** "light" is used by the checkout for a neutral, payment-gateway look. */
+  theme?: "dark" | "light";
 }
 
-const { title, description, path = "/", image = "/chenzo.jpg" } = Astro.props;
+const {
+  title,
+  description,
+  path = "/",
+  image = "/chenzo.jpg",
+  theme = "dark",
+} = Astro.props;
 const site = "https://thebossfrenchies.com";
 const canonical = `${site}${path}`;
 const ogImage = image.startsWith("http") ? image : `${site}${image}`;
@@ -25,7 +34,7 @@ const ogImage = image.startsWith("http") ? image : `${site}${image}`;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#060606" />
+    <meta name="theme-color" content={theme === "light" ? "#ffffff" : "#060606"} />
     <meta
       name="facebook-domain-verification"
       content="v4phhxytetfjpgi6f5avcxku29f0ow"
@@ -99,7 +108,13 @@ const ogImage = image.startsWith("http") ? image : `${site}${image}`;
     </script>
     <!-- End Google Tag Manager -->
   </head>
-  <body class="grain bg-void text-[#f4f6ef]">
+  <body
+    class:list={[
+      theme === "light"
+        ? "theme-light"
+        : "grain bg-void text-[#f4f6ef]",
+    ]}
+  >
     <!-- Google Tag Manager (noscript) -->
     <noscript>
       <iframe
@@ -112,5 +127,7 @@ const ogImage = image.startsWith("http") ? image : `${site}${image}`;
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
     <slot />
+
+    <PriceNotice />
   </body>
 </html>

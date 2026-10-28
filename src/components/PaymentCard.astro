@@ -1,0 +1,121 @@
+---
+import PaymentIcons from "./PaymentIcons.astro";
+import type { PaymentMethod } from "../data/payments";
+
+interface Props {
+  method: PaymentMethod;
+}
+
+const { method } = Astro.props;
+---
+
+<div
+  class="payment-card group relative overflow-hidden rounded-2xl border-2 border-[#14ed16] bg-black/90 p-4 transition-all duration-200 hover:border-[#c4fb09] hover:bg-black/95 active:scale-[0.995] sm:p-5"
+  style="box-shadow: 0 0 16px rgba(20, 237, 22, 0.28);"
+  data-copy-value={method.value}
+  data-method-name={method.name}
+  aria-label={`${method.name}: ${method.value}`}
+>
+  <div class="flex items-start gap-3 sm:gap-4">
+    <!-- Brand badge -->
+    <div
+      class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105 sm:h-12 sm:w-12"
+      style={`background-color: ${method.iconBg}; color: ${method.iconColor}; box-shadow: 0 2px 10px rgba(0,0,0,0.5);`}
+    >
+      <PaymentIcons name={method.id} class="h-7 w-7" />
+    </div>
+
+    <!-- Method name, holder and full value -->
+    <div class="min-w-0 flex-1">
+      <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+        <span class="font-display text-sm tracking-wider text-[#14ed16] uppercase sm:text-base">
+          {method.name}
+        </span>
+        <span class="text-[10px] tracking-wider text-white/40 uppercase">
+          Holder:
+          <span class="font-display text-[#c4fb09]">{method.recipient}</span>
+        </span>
+      </div>
+
+      <p class="mt-1.5 text-[10px] tracking-[0.14em] text-white/35 uppercase">
+        {method.valueLabel}
+      </p>
+      <p class="mt-0.5 font-mono text-lg leading-tight font-bold break-all text-white sm:text-xl">
+        {method.displayValue}
+      </p>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="mt-3 flex items-center gap-2 border-t border-white/10 pt-3">
+    <button
+      type="button"
+      class="copy-btn inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#c4fb09]/80 bg-[#c4fb09]/15 px-3 font-display text-xs tracking-wider text-[#c4fb09] uppercase transition-all duration-150 hover:bg-[#c4fb09] hover:text-black"
+      aria-label={`Copy ${method.name} details`}
+    >
+      <svg
+        class="h-4 w-4 shrink-0"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+      </svg>
+      <span class="btn-text">Copy</span>
+    </button>
+
+    {
+      method.qrCode && (
+        <button
+          type="button"
+          class="venmo-qr-btn inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-[#14ed16]/60 bg-white/5 px-2.5 font-display text-xs tracking-wider text-[#14ed16] uppercase transition-colors hover:bg-[#14ed16]/10 active:scale-95"
+          title="Open Venmo QR code"
+          aria-label="Open Venmo QR code to scan"
+        >
+          <img
+            src={method.qrCode}
+            alt=""
+            class="h-6 w-6 rounded bg-white object-contain p-0.5"
+            width="24"
+            height="24"
+          />
+          <span>QR</span>
+        </button>
+      )
+    }
+
+    {
+      method.actionUrl && (
+        <a
+          href={method.actionUrl}
+          target={method.actionUrl.startsWith("http") ? "_blank" : undefined}
+          rel="noopener noreferrer"
+          class="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-white/20 bg-white/5 px-3 font-display text-xs tracking-wider text-white/80 uppercase transition-colors hover:border-[#14ed16] hover:bg-[#14ed16]/10 hover:text-[#14ed16] active:scale-95"
+          title={method.actionLabel ?? "Open"}
+          aria-label={method.actionLabel ?? "Open"}
+        >
+          <span>{method.actionLabel ?? "Open"}</span>
+          <svg
+            class="h-3.5 w-3.5 shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+            />
+          </svg>
+        </a>
+      )
+    }
+  </div>
+</div>
